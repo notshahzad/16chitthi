@@ -8,6 +8,18 @@ socket.emit('login',{name,room});
 socket.on('send_users',(waiting)=>{
     ShowUsers(waiting)
 })
+socket.on('auto-submit',()=>{
+    document.getElementById("subm1t").click()
+})
+socket.on('game_start',is_start=>{
+    if(is_start == true){
+        div = document.getElementById('start-game-form') 
+        div.innerHTML += '<input id = "subm1t" type = "submit"></input>'
+    }else{
+        console.log(document.getElementById('start-game-form').innerHTML)
+    }
+})
+
 socket.on('redirect',destination=>{
     window.location.href = destination
 })

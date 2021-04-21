@@ -55,8 +55,12 @@ function CheckAuth({name,room}){
     user.online = true
     return user
 }
+function UsersInCurrentRoom(room){
+    return users.filter(user=> user.room === room)
+}
 exports.gamelogin = gamelogin
 exports.UsersInWaiting = UsersInWaiting
 exports.Offliner = Offliner
 exports.GetUserById = GetUserById
 exports.CheckAuth = CheckAuth
+exports.UsersInCurrentRoom = UsersInCurrentRoom

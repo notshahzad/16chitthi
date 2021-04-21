@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
-const {gamelogin ,UsersInWaiting ,Offliner ,GetUserById ,CheckAuth} = require('./utils/gamelogic');
+const {gamelogin ,UsersInWaiting ,Offliner ,GetUserById ,CheckAuth ,UsersInCurrentRoom} = require('./utils/gamelogic');
 
 const app = express();
 const HttpServer = http.createServer(app);
@@ -23,6 +23,15 @@ io.on('connect',socket=>{
             socket.join(room)
             waiting = UsersInWaiting(room)
             io.to(room).emit('send_users',waiting)
+            var allusers = UsersInCurrentRoom(room)
+            var is_start;
+            if(allusers.length == 4){
+                is_start = true
+                io.to(room).emit('game_start',is_start)
+            }else{
+                is_start = false
+                io.to(room).emit('game_start',is_start)
+            }
         }else{
             socket.emit('redirect',destination)
         }
@@ -31,6 +40,8 @@ io.on('connect',socket=>{
         user = CheckAuth({name,room})
         if(user){
             console.log(user)
+            socket.join(user.room)
+            socket.broadcast.to(user.room).emit('auto-submit')
         }else{
             socket.emit('redirect',destination)
         }
