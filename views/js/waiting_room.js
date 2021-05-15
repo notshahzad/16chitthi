@@ -15,8 +15,6 @@ socket.on('game_start',is_start=>{
     if(is_start == true){
         div = document.getElementById('start-game-form') 
         div.innerHTML += '<input id = "subm1t" type = "submit"></input>'
-    }else{
-        console.log(document.getElementById('start-game-form').innerHTML)
     }
 })
 

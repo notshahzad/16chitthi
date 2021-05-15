@@ -6,6 +6,10 @@ socket.emit('check_auth',{name,room})
 socket.on('redirect',destination=>{
     window.location.href = destination
 })
+socket.on('show_chitthi',chitthi2send=>{
+    console.log('emitting')
+    console.log(chitthi2send)
+})
 function getParameterByName(name, url = window.location.href) {
     name = name.replace(/[\[\]]/g, '\\$&');
     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),

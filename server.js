@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
-const {gamelogin ,UsersInWaiting ,Offliner ,GetUserById ,CheckAuth ,UsersInCurrentRoom} = require('./utils/gamelogic');
+const {gamelogin ,UsersInWaiting ,Offliner ,GetUserById ,CheckAuth ,UsersInCurrentRoom ,sendchitti} = require('./utils/gamelogic');
 
 const app = express();
 const HttpServer = http.createServer(app);
@@ -12,11 +12,11 @@ var destination = '/index.html'
 
 app.use(express.static(`${__dirname}/views`));
 app.use(bodyParser.urlencoded({extended : true}))
-app.set('view engine','ejs')
+//app.set('view engine','ejs')
 
 io.on('connect',socket=>{
     const id = socket.id
-    console.log(id)
+    //console.log(id)
     socket.on('login',({name,room})=>{
         login = gamelogin({name,room,id})
         if(login!=false){
@@ -38,10 +38,12 @@ io.on('connect',socket=>{
     })
     socket.on('check_auth',({name,room})=>{
         user = CheckAuth({name,room})
-        if(user){
-            console.log(user)
+        if(user != false){
             socket.join(user.room)
             socket.broadcast.to(user.room).emit('auto-submit')
+            chitthi2send = sendchitti(user.name)
+            console.log(chitthi2send)
+            socket.emit('show_chitthi',chitthi2send)
         }else{
             socket.emit('redirect',destination)
         }

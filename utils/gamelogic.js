@@ -1,3 +1,5 @@
+const { json } = require("body-parser")
+
 users=[]
 function gamelogin({name,room,id}){
     room_users = users.filter(user =>user.room === room)
@@ -51,12 +53,44 @@ function Offliner(id){
     }
 }
 function CheckAuth({name,room}){
-    const user = users.find(user => user.name === name && user.room === room)
-    user.online = true
-    return user
+    try{
+        const user = users.find(user => user.name === name && user.room === room)
+        user.online = true
+        GenerateChitti(room)
+        return user
+    }
+    catch{
+        return false
+    }
 }
 function UsersInCurrentRoom(room){
     return users.filter(user=> user.room === room)
+}
+function GenerateChitti(room){
+    const user = UsersInCurrentRoom(room)
+    var chitti = [{name : 'aam' , value : 0},
+        {name : 'jaam' , value : 0},      
+        {name : 'kaju' , value : 0},
+        {name : 'badam' , value : 0}
+    ]
+    list2 = []
+    if(user[0]['chitthi'].length ==0){
+        for(j=0;j<4;j++){
+            for(i=0;i<4;i++){
+                random = Math.floor(Math.random() * 4)
+                if(chitti[random].value<4){
+                    chitti[random].value++
+                    user[j]['chitthi'].push(chitti[random].name)
+                }else{
+                    i--
+                }
+            }
+        }
+    }
+}
+function sendchitti(name){
+    const user = users.find(user=> user.name === name)
+    return user.chitthi
 }
 exports.gamelogin = gamelogin
 exports.UsersInWaiting = UsersInWaiting
@@ -64,3 +98,4 @@ exports.Offliner = Offliner
 exports.GetUserById = GetUserById
 exports.CheckAuth = CheckAuth
 exports.UsersInCurrentRoom = UsersInCurrentRoom
+exports.sendchitti = sendchitti
