@@ -1,34 +1,37 @@
-const { json } = require("body-parser")
-
 users=[]
 function gamelogin({name,room,id}){
-    room_users = users.filter(user =>user.room === room)
-    if(room_users.length == 0){
-        user={name ,room ,id}
-        user['chitthi'] = []
-        user['online'] = true
-        users.push(user)
-        return users
-    }
-    else if(room_users.length<=3){
-        user = room_users.find(user => user.name === name && user.room === room)
-        if(!user){
+    if(name.length!= 0 && room.length != 0){
+        room_users = users.filter(user =>user.room === room)
+        if(room_users.length == 0){
             user={name ,room ,id}
-            user['chitthi']=[]
-            user['online'] =  true
+            user['chitthi'] = []
+            user['online'] = true
             users.push(user)
             return users
-        }else if(user && user.online == false){
-            user.id = id
-            user.online = true
-            return users
-        }else if(user && user.online == true){
-            console.log(id)
-            console.log(user)
+        }
+        else if(room_users.length<=3){
+            user = room_users.find(user => user.name === name && user.room === room)
+            if(!user){
+                user={name ,room ,id}
+                user['chitthi']=[]
+                user['online'] =  true
+                users.push(user)
+                return users
+            }else if(user && user.online == false){
+                user.id = id
+                user.online = true
+                return users
+            }else if(user && user.online == true){
+                console.log(id)
+                console.log(user)
+                return false
+            }
+        }
+        else if(room_users.length==4){
             return false
         }
     }
-    else if(room_users.length==4){
+    else{
         return false
     }
 }
