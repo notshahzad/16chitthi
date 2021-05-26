@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action = 'waiting_room.html' id = 'form'>
+        <input type="text" name="name01" id="name01" placeholder="input name pls ;)">
+        <input type="text" name="room01" id="room01" placeholder="input room pls ;)">
+        <input type="submit" value="submit">
+    </form>
+</body>
+<script>
+    const form = document.getElementById('form')
+    form.addEventListener('submit',e=>{
+        var name = document.getElementById('name01')
+        var room = document.getElementById('room01')
+        if(name.value === '' || room.value === ''){
+            e.preventDefault()
+            alert('type a valid name and room')
+        }
+    })
+</script>
+</html>
