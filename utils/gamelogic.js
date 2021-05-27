@@ -6,7 +6,7 @@ function gamelogin({ name, room, id }) {
       user = { name, room, id };
       user["chitthi"] = [];
       user["online"] = true;
-      user["turn"] = false;
+      user["turn"] = true;
       users.push(user);
       return users;
     } else if (room_users.length <= 3) {
@@ -97,14 +97,14 @@ function sendchitti(name, room) {
   const user = users.find((user) => user.name === name && user.room === room);
   return user.chitthi;
 }
-function UserToStart(room) {
-  const user = users.filter((user) => user.room === room);
-  user[0].turn = true;
-  return user[0];
+function UserSendingChtthi(room) {
+  const user = users.find((user) => user.room === room && user.turn == true);
+  return user;
 }
 function ChangeUserId(name, socid) {
   const user = users.find((user) => user.name === name);
   user.id = socid;
+  console.log(user);
 }
 function ChitthiPass(chitthi, name, room) {
   const allusers = users.filter((user) => user.room === room);
@@ -114,11 +114,40 @@ function ChitthiPass(chitthi, name, room) {
   for (var i = 0; i < crntuser["chitthi"].length; i++) {
     if (crntuser["chitthi"][i] === chitthi) {
       crntuser["chitthi"].splice(i, 1);
+      crntuser.turn = false;
       break;
+    } else {
+      console.log("f this shit");
     }
   }
   var crntuserindex = allusers.indexOf(crntuser);
-  allusers[crntuserindex + 1]["chitthi"].push(chitthi);
+  if (crntuserindex <= 2) {
+    crntuserindex += 1;
+  } else {
+    crntuserindex = 0;
+  }
+  allusers[crntuserindex]["chitthi"].push(chitthi);
+  allusers[crntuserindex].turn = true;
+  CheckWin({ crntuserindex, chitthi, room });
+}
+function CheckWin({ crntuserindex, chitthi, room }) {
+  var allusers = users.filter((user) => user.room === room);
+  let tempuser = Object.assign({}, allusers[crntuserindex]);
+  console.log(tempuser);
+  for (var i = 0; i < tempuser["chitthi"].length; i++) {
+    if (tempuser["chitthi"][i] === chitthi) {
+      tempuser["chitthi"].splice(i, 1);
+      break;
+    }
+  }
+  const allEqual = (arr) => arr.every((val) => val === arr[0]);
+  var win = allEqual(tempuser["chitthi"]);
+  if (win == true) {
+    for (i = 0; i < 4; i++) {
+      allusers[i]["chitthi"] = [];
+    }
+    GenerateChitti(allusers[0].room);
+  }
 }
 exports.gamelogin = gamelogin;
 exports.UsersInWaiting = UsersInWaiting;
@@ -128,6 +157,6 @@ exports.CheckAuth = CheckAuth;
 exports.UsersInCurrentRoom = UsersInCurrentRoom;
 exports.GenerateChitti = GenerateChitti;
 exports.sendchitti = sendchitti;
-exports.UserToStart = UserToStart;
+exports.UserSendingChtthi = UserSendingChtthi;
 exports.ChangeUserId = ChangeUserId;
 exports.ChitthiPass = ChitthiPass;

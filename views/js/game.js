@@ -15,15 +15,12 @@ socket.on("show_chitthi", (chitthi2send) => {
 socket.on("send_users", (waiting) => {
   ShowUsers(waiting);
 });
-socket.on("IsItMe", () => {
-  console.log("yes");
+socket.on("Turn", () => {
   pass = true;
 });
 socket.on("update-chitthi", () => {
-  console.log("yea");
   clear();
   socket.emit("SendMeNewChitthi", { name, room });
-  alert("updated");
 });
 function clear() {
   document.getElementById("chitti-container").innerHTML = "";

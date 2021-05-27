@@ -10,7 +10,7 @@ const {
   UsersInCurrentRoom,
   sendchitti,
   GenerateChitti,
-  UserToStart,
+  UserSendingChtthi,
   ChangeUserId,
   ChitthiPass,
 } = require("./utils/gamelogic");
@@ -52,26 +52,27 @@ io.on("connect", (socket) => {
   socket.on("Start-game", ({ name, room }) => {
     user = CheckAuth({ name, room });
     if (user != false) {
-      ChangeUserId(name, socket.id);
       socket.join(user.room);
       socket.broadcast.to(user.room).emit("auto-submit");
       GenerateChitti(room);
+      ChangeUserId(name, socket.id);
       const chitthi2send = sendchitti(name, room);
       socket.emit("show_chitthi", chitthi2send);
       waiting = UsersInWaiting(room);
       io.to(room).emit("send_users", waiting);
-      const first = UserToStart(room);
-      if (socket.id === first.id) {
-        io.to(socket.id).emit("IsItMe");
+      const first = UserSendingChtthi(room);
+      if (socket.id == first.id) {
+        io.to(socket.id).emit("Turn");
       }
     } else {
       socket.emit("redirect", destination);
     }
   });
   socket.on("ChittiToPass", ({ chitthival, name, room }) => {
-    console.log(chitthival, name, room);
     ChitthiPass(chitthival, name, room);
     io.to(room).emit("update-chitthi");
+    pass = UserSendingChtthi(room);
+    io.to(pass.id).emit("Turn");
     //waiting = UsersInWaiting(room);
     //io.to(room).emit("send_users", waiting);
   });
