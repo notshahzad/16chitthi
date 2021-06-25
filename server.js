@@ -69,10 +69,14 @@ io.on("connect", (socket) => {
     }
   });
   socket.on("ChittiToPass", ({ chitthival, name, room }) => {
-    ChitthiPass(chitthival, name, room);
+    won = ChitthiPass(chitthival, name, room);
     io.to(room).emit("update-chitthi");
     pass = UserSendingChtthi(room);
     io.to(pass.id).emit("Turn");
+    if (won != undefined) {
+      console.log(won);
+      io.to(room).emit("won", won);
+    }
     //waiting = UsersInWaiting(room);
     //io.to(room).emit("send_users", waiting);
   });

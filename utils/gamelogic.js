@@ -125,23 +125,30 @@ function ChitthiPass(chitthi, name, room) {
   }
   allusers[crntuserindex]["chitthi"].push(chitthi);
   allusers[crntuserindex].turn = true;
-  CheckWin({ crntuserindex, chitthi, room });
+  ifwin = CheckWin({ crntuserindex, chitthi, room });
+  if (ifwin != undefined) {
+    return ifwin;
+  }
 }
 function CheckWin({ crntuserindex, chitthi, room }) {
   var allusers = users.filter((user) => user.room === room);
   let tempuser = Object.assign({}, allusers[crntuserindex]);
   var chitthi_counter = new Set(tempuser.chitthi);
+  var won;
   chitthi_counter.forEach((e) => {
     let chitlen = tempuser.chitthi.filter((chit) => chit === e).length;
-    console.log(chitlen);
     if (chitlen == 4) {
       for (i = 0; i < 4; i++) {
         allusers[i]["chitthi"] = [];
       }
       GenerateChitti(allusers[0].room);
+      won = true;
       return;
     }
   });
+  if (won) {
+    return tempuser.name;
+  }
 }
 exports.gamelogin = gamelogin;
 exports.UsersInWaiting = UsersInWaiting;

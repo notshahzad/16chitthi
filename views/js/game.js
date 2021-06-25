@@ -18,6 +18,9 @@ socket.on("send_users", (waiting) => {
 socket.on("Turn", () => {
   pass = true;
 });
+socket.on("won", (won) => {
+  alert(`${won} won`);
+});
 socket.on("update-chitthi", () => {
   clear();
   socket.emit("SendMeNewChitthi", { name, room });
