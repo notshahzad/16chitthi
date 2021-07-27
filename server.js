@@ -19,14 +19,23 @@ const app = express();
 const HttpServer = http.createServer(app);
 const io = socketio(HttpServer);
 const bodyParser = require("body-parser");
-const { mainModule } = require("process");
 
 var destination = "/index.html";
 
 app.use(express.static(`${__dirname}/views`));
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.set('view engine','ejs')
+app.set("view engine", "ejs");
 
+app.post("/waitingroom", (req, res) => {
+  res.render("waiting_room", {
+    name: req.body.name,
+    room: req.body.room,
+  });
+});
+app.post("/game", (req, res) => {
+  console.log(req.body.name, req.body.room);
+  res.render("game", { name: req.body.name, room: req.body.room });
+});
 io.on("connect", (socket) => {
   const id = socket.id;
   //console.log(id)
@@ -74,7 +83,6 @@ io.on("connect", (socket) => {
     pass = UserSendingChtthi(room);
     io.to(pass.id).emit("Turn");
     if (won != undefined) {
-      console.log(won);
       io.to(room).emit("won", won);
     }
     //waiting = UsersInWaiting(room);

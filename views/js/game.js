@@ -1,6 +1,6 @@
 var socket = io();
-var name = getParameterByName("name");
-var room = getParameterByName("room");
+var name = document.getElementById("name").value;
+var room = document.getElementById("room").value;
 var pass;
 console.log(name, room);
 socket.emit("Start-game", { name, room });
@@ -52,12 +52,4 @@ function SendChittiToServer() {
     socket.emit("ChittiToPass", { chitthival, name, room });
     pass = false;
   }
-}
-function getParameterByName(name, url = window.location.href) {
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
